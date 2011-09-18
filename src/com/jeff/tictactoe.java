@@ -23,7 +23,7 @@ public class tictactoe extends Activity implements View.OnClickListener {
 		t.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.WRAP_CONTENT));
 		setContentView(t);
 
-		//init
+		//init *one change
 		grid = new Button[gridSize][gridSize];
 		tr = new TableRow[gridSize];
 			
