@@ -49,9 +49,9 @@ public class tictactoe extends Activity implements View.OnClickListener {
 
 			grid = new GridButton[gridSize][gridSize];
 			//loop to create cells
-			for (int i=0;i<=gridSize-1;i++) {
+			for (int i=0;i<gridSize;i++) {
 				tr[i] = new TableRow(this);	
-				for (int j=0;j<=gridSize-1;j++) {
+				for (int j=0;j<gridSize;j++) {
 					grid[i][j] = new GridButton(this,i,j);
 					grid[i][j].setOnClickListener(this);
 					grid[i][j].setText(DEFAULT_TEXT);
@@ -77,14 +77,60 @@ public class tictactoe extends Activity implements View.OnClickListener {
 			return;
 
 		if(currentPlayer == 1){ 
+			grid[gb.row][gb.col].status = 1;
 			grid[gb.row][gb.col].setText("X");	
 			grid[gb.row][gb.col].setTextColor(Color.RED);	
 			currentPlayer = 2;
 		}else if(currentPlayer == 2) {
-			grid[gb.row][gb.col].setTextColor(Color.BLUE);	
+			grid[gb.row][gb.col].status = -1;
 			grid[gb.row][gb.col].setText("O");	
+			grid[gb.row][gb.col].setTextColor(Color.BLUE);	
 			currentPlayer = 1;
 		}
+
+		//Log.i("VICTORIOUS","WHO WINS: " + checkVictory());
+	}
+
+	public String checkVictory() {
+		int rowTotal = 0;
+		int colTotal = 0;
+		int backTotal = 0;
+		int forwardTotal = 0;
+
+		for (int i=0;i<gridSize;i++) { //row
+			for (GridButton gb : grid[i]) {
+				rowTotal += gb.status;		
+			}
+			for (int j=0;j<gridSize;j++) { //col
+				colTotal += grid[j][i].status;
+			}
+
+			if (rowTotal == gridSize || colTotal == gridSize) {
+				//player wins,return
+				return "X";
+
+			}else if (rowTotal == -gridSize || colTotal == -gridSize) {
+				//comp wins,return
+				return "O";
+			}
+			//reset for next row
+			rowTotal = colTotal = 0;
+			
+			//check back diagonal
+			backTotal += grid[i][i].status;	
+		}
+		
+		//check forward diagonal
+		forwardTotal = grid[0][2].status + grid[1][1].status + grid[2][0].status; //hard coded for testing
+		
+		
+		if (backTotal == gridSize || forwardTotal == gridSize) {
+			return "X";
+		}else if (backTotal == -gridSize || forwardTotal == -gridSize) {
+			return "O";
+		}
+
+		return "";
 	}
 	//save state on rotate
 	@Override
