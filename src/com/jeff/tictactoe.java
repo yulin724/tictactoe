@@ -22,6 +22,9 @@ public class tictactoe extends Activity implements View.OnClickListener {
 	int gridSize = 3;
 	int currentPlayer = 1;
 
+	private static final String DEFAULT_TEXT = " "; //fixes a bug where buttons resize when the text changes
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,6 +54,7 @@ public class tictactoe extends Activity implements View.OnClickListener {
 				for (int j=0;j<=gridSize-1;j++) {
 					grid[i][j] = new GridButton(this,i,j);
 					grid[i][j].setOnClickListener(this);
+					grid[i][j].setText(DEFAULT_TEXT);
 					tr[i].addView(grid[i][j],cl);
 				}
 				tl.addView(tr[i],rl);
@@ -69,7 +73,7 @@ public class tictactoe extends Activity implements View.OnClickListener {
 		//Log.i("TICTACTOE", "CLICKINFO: " + gb.row +  "," + gb.col);
 
 		//already set
-		if (gb.getText() != "") 
+		if (gb.getText() != DEFAULT_TEXT) 
 			return;
 
 		if(currentPlayer == 1){ 

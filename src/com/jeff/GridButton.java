@@ -4,6 +4,7 @@ import android.widget.Button;
 import android.content.Context;
 import android.util.TypedValue;
 import android.graphics.Canvas;
+import android.graphics.Typeface;
 import android.view.Display;
 import android.view.WindowManager;
 import android.view.Surface;
@@ -19,9 +20,11 @@ public class GridButton extends Button {
 	public GridButton(Context con,int row, int col) {
 		super(con);
 		status = 0;
+		this.setTypeface(Typeface.MONOSPACE);//prevent button resizing
 		this.row = row;
 		this.col = col;
 		this.d = ((WindowManager) con.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+
 	}
 	@Override
 	public void onDraw(Canvas c) {
