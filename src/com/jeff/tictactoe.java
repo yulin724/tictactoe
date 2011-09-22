@@ -24,11 +24,11 @@ public class tictactoe extends Activity implements View.OnClickListener {
 	int gridSize = 3;
 	int currentPlayer = 1;
 	String winner;
+	int moves = 0; //number of moves
 
 	private static final String DEFAULT_TEXT = " "; //fixes a bug where buttons resize when the text changes
 	
 	/*
-	 *		logic for tie	
 	 *		color indicating victorious play
 	 *		change default back button behavior
 	 * 
@@ -75,6 +75,7 @@ public class tictactoe extends Activity implements View.OnClickListener {
 
 	}
 	public void resetGrid() {
+		moves = 0;
 		for (int i=0;i<gridSize;i++) {
 			for (int j=0;j<gridSize;j++) {
 				grid[i][j].setText(DEFAULT_TEXT);
@@ -84,6 +85,9 @@ public class tictactoe extends Activity implements View.OnClickListener {
 
 	}
 	public void onClick(View v) {
+
+		moves++;
+
 		GridButton gb = (GridButton) v;
 		//Log.i("TICTACTOE", "CLICKINFO: " + gb.row +  "," + gb.col);
 
@@ -106,14 +110,13 @@ public class tictactoe extends Activity implements View.OnClickListener {
 		winner = checkVictory();
 		if(!winner.equals("")) {
 			showVictor(winner);
-			//resetGrid();
 		}
 
 		//Log.i("VICTORY_CHECK","WHO WINS: " + checkVictory());
 	}
 	public void showVictor(String victor) {
 		AlertDialog ad = new AlertDialog.Builder(this).create();
-		ad.setTitle("WINNER!");
+		ad.setTitle("GAME OVER");
 		ad.setMessage(victor + " wins!");
 		ad.setButton("Cool", new DialogInterface.OnClickListener(){
 			public void onClick(DialogInterface dialog,int which) {
@@ -128,6 +131,7 @@ public class tictactoe extends Activity implements View.OnClickListener {
 		int backTotal = 0;
 		int forwardTotal = 0;
 
+		
 		for (int i=0;i<gridSize;i++) { //row
 			for (GridButton gb : grid[i]) {
 				rowTotal += gb.status;		
@@ -157,6 +161,11 @@ public class tictactoe extends Activity implements View.OnClickListener {
 			return "O";
 		}
 
+		//check for tie
+		//Log.i("MOVES",""+moves);
+		if (moves == gridSize * gridSize) {
+			return "NO ONE"; //lazy way to shoe horn this function to work with showVictory	
+		}
 		return "";
 	}
 	//save state on rotate
