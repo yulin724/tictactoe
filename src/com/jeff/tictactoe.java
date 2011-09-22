@@ -29,9 +29,7 @@ public class tictactoe extends Activity implements View.OnClickListener {
 	private static final String DEFAULT_TEXT = " "; //fixes a bug where buttons resize when the text changes
 	
 	/*
-	 *		color indicating victorious play
 	 *		change default back button behavior
-	 * 
 	 */
 	
 	@Override
@@ -140,10 +138,17 @@ public class tictactoe extends Activity implements View.OnClickListener {
 				colTotal += grid[j][i].status;
 			}
 
-			if (rowTotal == gridSize || colTotal == gridSize) {//player wins,return
+			if (rowTotal == gridSize) {
+				highlightVictory(i,"row");
 				return "X";
-
-			}else if (rowTotal == -gridSize || colTotal == -gridSize) {//comp wins,return
+			}else if(colTotal == gridSize) {
+				highlightVictory(i,"col");
+				return "X";
+			}else if(rowTotal == -gridSize) {
+				highlightVictory(i,"row");
+				return "O";
+			}else if(colTotal == -gridSize) {
+				highlightVictory(i,"col");
 				return "O";
 			}
 			
@@ -155,9 +160,17 @@ public class tictactoe extends Activity implements View.OnClickListener {
 			forwardTotal += grid[i][(gridSize-1)-i].status;
 		}
 		
-		if (backTotal == gridSize || forwardTotal == gridSize) {
+		if (backTotal == gridSize) {
+			highlightVictory(0,"bdiag");
 			return "X";
-		}else if (backTotal == -gridSize || forwardTotal == -gridSize) {
+		}else if(forwardTotal == gridSize) {
+			highlightVictory(0,"fdiag");
+			return "X";
+		}else if(backTotal == -gridSize) {
+			highlightVictory(0,"bdiag");
+			return "O";
+		}else if(forwardTotal == -gridSize) {
+			highlightVictory(0,"fdiag");
 			return "O";
 		}
 
@@ -167,6 +180,25 @@ public class tictactoe extends Activity implements View.OnClickListener {
 			return "NO ONE"; //lazy way to shoe horn this function to work with showVictory	
 		}
 		return "";
+	}
+	public void highlightVictory(int element, String dir) {
+		if (dir.equals("row")) {
+			for (int i=0;i<gridSize;i++) { 
+				grid[element][i].setTextColor(Color.YELLOW);
+			}
+		}else if(dir.equals("col")) {
+			for (int i=0;i<gridSize;i++) { 
+				grid[i][element].setTextColor(Color.YELLOW);
+			}
+		}else if(dir.equals("fdiag")) {
+			for (int i=0;i<gridSize;i++) {
+				grid[i][(gridSize-1)-i].setTextColor(Color.YELLOW);
+			}
+		}else if(dir.equals("bdiag")) {
+			for (int i=0;i<gridSize;i++) {
+				grid[i][i].setTextColor(Color.YELLOW);
+			}
+		}
 	}
 	//save state on rotate
 	@Override
