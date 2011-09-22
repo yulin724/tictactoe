@@ -2,6 +2,7 @@ package com.jeff;
 
 import android.util.Log;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TableRow;
 import android.widget.AbsoluteLayout.*;
 import android.widget.FrameLayout;
 import android.graphics.Color;
+import android.content.DialogInterface;
 import com.jeff.GridButton;
 
 
@@ -21,16 +23,21 @@ public class tictactoe extends Activity implements View.OnClickListener {
 	GridButton[][] grid;
 	int gridSize = 3;
 	int currentPlayer = 1;
+	String winner;
 
 	private static final String DEFAULT_TEXT = " "; //fixes a bug where buttons resize when the text changes
 	
+	/*
+	 *		logic for tie	
+	 *		color indicating victorious play
+	 *		change default back button behavior
+	 * 
+	 */
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		
-	
 		if (getLastNonConfigurationInstance() == null) {//if first time
 			//set up main screen
 			tl = new TableLayout(this);//table layout
@@ -67,12 +74,20 @@ public class tictactoe extends Activity implements View.OnClickListener {
 		setContentView(tl);
 
 	}
+	public void resetGrid() {
+		for (int i=0;i<gridSize;i++) {
+			for (int j=0;j<gridSize;j++) {
+				grid[i][j].setText(DEFAULT_TEXT);
+				grid[i][j].status = 0;
+			}
+		}
 
+	}
 	public void onClick(View v) {
 		GridButton gb = (GridButton) v;
 		//Log.i("TICTACTOE", "CLICKINFO: " + gb.row +  "," + gb.col);
 
-		//already set
+		//make sure the button is not already set
 		if (gb.getText() != DEFAULT_TEXT) 
 			return;
 
@@ -87,10 +102,26 @@ public class tictactoe extends Activity implements View.OnClickListener {
 			grid[gb.row][gb.col].setTextColor(Color.BLUE);	
 			currentPlayer = 1;
 		}
+		
+		winner = checkVictory();
+		if(!winner.equals("")) {
+			showVictor(winner);
+			//resetGrid();
+		}
 
-		//Log.i("VICTORIOUS","WHO WINS: " + checkVictory());
+		//Log.i("VICTORY_CHECK","WHO WINS: " + checkVictory());
 	}
-
+	public void showVictor(String victor) {
+		AlertDialog ad = new AlertDialog.Builder(this).create();
+		ad.setTitle("WINNER!");
+		ad.setMessage(victor + " wins!");
+		ad.setButton("Cool", new DialogInterface.OnClickListener(){
+			public void onClick(DialogInterface dialog,int which) {
+				resetGrid();
+			}
+		});
+		ad.show();
+	}
 	public String checkVictory() {
 		int rowTotal = 0;
 		int colTotal = 0;
@@ -105,24 +136,20 @@ public class tictactoe extends Activity implements View.OnClickListener {
 				colTotal += grid[j][i].status;
 			}
 
-			if (rowTotal == gridSize || colTotal == gridSize) {
-				//player wins,return
+			if (rowTotal == gridSize || colTotal == gridSize) {//player wins,return
 				return "X";
 
-			}else if (rowTotal == -gridSize || colTotal == -gridSize) {
-				//comp wins,return
+			}else if (rowTotal == -gridSize || colTotal == -gridSize) {//comp wins,return
 				return "O";
 			}
+			
 			//reset for next row
 			rowTotal = colTotal = 0;
 			
-			//check back diagonal
+			//check back and forward diagonal
 			backTotal += grid[i][i].status;	
+			forwardTotal += grid[i][(gridSize-1)-i].status;
 		}
-		
-		//check forward diagonal
-		forwardTotal = grid[0][2].status + grid[1][1].status + grid[2][0].status; //hard coded for testing
-		
 		
 		if (backTotal == gridSize || forwardTotal == gridSize) {
 			return "X";

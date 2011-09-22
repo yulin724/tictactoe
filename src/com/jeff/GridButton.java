@@ -23,7 +23,7 @@ public class GridButton extends Button {
 		this.setTypeface(Typeface.MONOSPACE);//prevent button resizing
 		this.row = row;
 		this.col = col;
-		this.d = ((WindowManager) con.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		this.d = ((WindowManager) con.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();//consider moving this to parent
 
 	}
 	@Override
