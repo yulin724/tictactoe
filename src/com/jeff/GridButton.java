@@ -11,7 +11,7 @@ import android.view.Surface;
 
 public class GridButton extends Button {
 	//getter and setter methods be damned
-	public int status;	
+	public int status; //holds variable indicating which player has pressed the button	
 	public int row;	//position in the grid, zero is first
 	public int col;
 	Display d;
@@ -20,7 +20,7 @@ public class GridButton extends Button {
 	public GridButton(Context con,int row, int col) {
 		super(con);
 		status = 0;
-		this.setTypeface(Typeface.MONOSPACE);//prevent button resizing
+		this.setTypeface(Typeface.MONOSPACE);//lazy fix to bug where in the button would become larger than its neighbors when it was selected
 		this.row = row;
 		this.col = col;
 		this.d = ((WindowManager) con.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();//consider moving this to parent

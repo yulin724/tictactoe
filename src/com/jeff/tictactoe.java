@@ -16,20 +16,27 @@ import android.graphics.Color;
 import android.content.DialogInterface;
 import com.jeff.GridButton;
 
-
+/*
+ * NOTES:
+ * 	The output of the LOG statements goes to logcat which can be invoked using `adb logcat` in a shell 
+ * 	while the device is running. 
+ *
+ *
+ */
 public class tictactoe extends Activity implements View.OnClickListener {
 	TableLayout tl;	
 	TableRow[] tr;
 	GridButton[][] grid;
-	int gridSize = 3;
+	int gridSize = 3;				//change this for some amusement (dont mind the font)
 	int currentPlayer = 1;
 	String winner;
-	int moves = 0; //number of moves
+	int moves = 0;					//used to check for a tie 
+	AlertDialog ad;
 
 	private static final String DEFAULT_TEXT = " "; //fixes a bug where buttons resize when the text changes
 	
-	/*
-	 *		change default back button behavior
+	/* TODO:
+	 *		Alertbox when rotated leaks (see logcat output)
 	 */
 	
 	@Override
@@ -46,7 +53,6 @@ public class tictactoe extends Activity implements View.OnClickListener {
 			//table grids	
 			tr = new TableRow[gridSize];
 		
-			/*children must have layout params of their parent */
 			//layout params for rows
 			TableLayout.LayoutParams rl = new TableLayout.LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT,1.0f);
 			//layout for cells in the row
@@ -113,7 +119,9 @@ public class tictactoe extends Activity implements View.OnClickListener {
 		//Log.i("VICTORY_CHECK","WHO WINS: " + checkVictory());
 	}
 	public void showVictor(String victor) {
-		AlertDialog ad = new AlertDialog.Builder(this).create();
+		ad = new AlertDialog.Builder(this).create();
+		ad.setOwnerActivity(this);
+		ad.setCancelable(false);
 		ad.setTitle("GAME OVER");
 		ad.setMessage(victor + " wins!");
 		ad.setButton("Cool", new DialogInterface.OnClickListener(){
@@ -200,7 +208,8 @@ public class tictactoe extends Activity implements View.OnClickListener {
 			}
 		}
 	}
-	//save state on rotate
+	//Save state on rotate,keyboard slide out, etc. This method only allows saving one variable. 
+	//You can send an ArrayList full of objects however. The compiler complains a bit though. 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
 		if (tl != null) {//save table layout
